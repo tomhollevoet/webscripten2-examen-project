@@ -1,0 +1,115 @@
+{# extend the parent tpl #}
+{% extends 'layout.twig' %}
+
+
+{# set the pagetitle in the parent tpl #}
+{% set pageTitle = 'Immo Tom | Start' %}
+
+{% block pageContent %}
+</head>
+<body class="homepage">
+<div id="header-wrapper">
+	<header id="header">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="4u" id="logo">
+					<h1><a href="{{ path('immotom.browse')}}" class="mobileUI-site-name">Immo Tom</a></h1>
+					<p>De immo-site bij uitstek!</p>
+				</div>
+				<div class="8u" id="menu">
+					<nav class="mobileUI-site-nav">
+						<ul>
+							<li class="current_page_item"><a href="{{ path('immotom.browse')}}">Start</a></li>
+							<li><a href="{{ path('immotom.tekoop', { page : '1' })}}">Te Koop</a></li>
+							<li><a href="{{ path('immotom.tehuur', { page : '1' })}}">Te Huur</a></li>
+							<li><a href="{{ path('immotom.onzemakelaars', { page : '1' })}}">Onze Makelaars</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</header>
+</div>
+   <div class="5grid-layout">
+	<div class="row">
+		<div id="banner" class="12u">
+			<div class="container"><img src="{{ app.request.baseUrl }}/images/home.jpg" alt=""></div>
+		</div>
+	</div>
+</div>
+<div id="wrapper">
+	<div id="page">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="9u">
+					<div class="mobileUI-main-content" id="content">
+						<section>
+							<div class="post">
+								<h2>Welkom bij Immo Tom!</h2>
+								<p class="subtitle">De imo-site bij uitstek!</p>
+								<p>U zoekt een appartement te huur of huis te koop in België?
+                                                                   Vind nu een woning dankzij de zoekmotor voor appartementen en huizen te koop of te huur.
+                                                                   Ook voor het huren van een vakantiehuis aan de Belgische Kust, in de Ardennen,...
+                                                                   kunt u terecht bij de eerste vastgoedsite in België.
+                                                                </p>
+                                                        </div>
+                                                        <div class="post">
+                                                                <img src="{{ app.request.baseUrl }}/images/immotomlogo.jpg" alt="">
+							</div>
+						</section>
+					</div>
+				</div>
+				<div class="3u" id="sidebar1">
+					<section>
+						<h2>Onze makelaars</h2>
+						<ul class="style2">
+                                                    {% if  brokers %}
+                                                    {% for broker in brokers %}  
+                                                    <li>
+								<p><a href="{{ path('immotom.contact', { id : broker.idbrokers })}}"><img src="{{ app.request.baseUrl }}/imagesbrokers/{{ broker.image }}" alt="{{ broker.name }}" height="80">{{ broker.name }}</a></p>
+                                                                <p>{{ broker.address }}<br> {{ broker.zip }} {{ broker.city }}</p>
+                                                    </li>
+                                                    {% endfor %}
+						</ul>
+                                                {% else %}
+                                                <p>Geen makelaars gevonden.</p> 
+                                                {% endif %} 
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="marketing">
+		<div class="5grid-layout">
+			<div class="row divider2">
+			<h2>Onze meest bekeken aanbiedingen</h2>
+                                {% if  realestates %}
+                                {% for realestate in realestates %}  
+				<div class="3u">
+					<section>
+						<h2 class="title">{{ realestate.name }} in {{ realestate.city }}</h2>
+						<p class="subtitle">
+                                                                    {% if  realestate.forsale == 1 %}
+                                                                        Type: Te koop<br> 
+                                                                        Prijs: {{ realestate.price | number_format(0, '.', '.')}} euro <br> 
+                                                                        Aantal x geklikt: {{ realestate.countclick }}</p>
+                                                                        <p><a href="{{ path('immotom.tekoopdetail', { id : realestate.idrealestate })}}"><img src="{{ app.request.baseUrl }}/imagesrealestate/{{ realestate.photoname }}" alt="" height="282"></a></p>
+                                                                        <p class="button-style2"><a href="{{ path('immotom.tekoopdetail', { id : realestate.idrealestate })}}">Meer informatie</a></p>
+                                                                    {% else %}
+                                                                        Type: Te huur<br> 
+                                                                        Prijs: {{ realestate.price | number_format(0, '.', '.')}} euro/maand<br> 
+                                                                        Aantal x geklikt: {{ realestate.countclick }}</p>
+                                                                        <p><a href="{{ path('immotom.tehuurdetail', { id : realestate.idrealestate })}}"><img src="{{ app.request.baseUrl }}/imagesrealestate/{{ realestate.photoname }}" alt="" height="282"></a></p>
+                                                                        <p class="button-style2"><a href="{{ path('immotom.tehuurdetail', { id : realestate.idrealestate })}}">Meer informatie</a></p>
+                                                                    {% endif %} 
+					</section>
+				</div>
+                                {% endfor %}
+                                {% else %}
+                                <p>Geen vastgoed gevonden.</p> 
+                                {% endif %} 
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,158 @@
+{# extend the parent tpl #}
+{% extends 'layout.twig' %}
+
+
+{# set the pagetitle in the parent tpl #}
+{% set pageTitle = 'Immo Tom | Te Huur' %}
+
+{% block pageContent %}
+
+</head>
+<body class="homepage">
+<div id="header-wrapper">
+	<header id="header">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="4u" id="logo">
+					<h1><a href="{{ path('immotom.browse')}}" class="mobileUI-site-name">Immo Tom</a></h1>
+					<p>De immo-site bij uitstek!</p>
+				</div>
+				<div class="8u" id="menu">
+					<nav class="mobileUI-site-nav">
+						<ul>
+							<li><a href="{{ path('immotom.browse')}}">Start</a></li>
+							<li><a href="{{ path('immotom.tekoop', { page : '1' })}}">Te Koop</a></li>
+							<li class="current_page_item"><a href="{{ path('immotom.tehuur', { page : '1' })}}">Te Huur</a></li>
+							<li><a href="{{ path('immotom.onzemakelaars', { page : '1' })}}">Onze Makelaars</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</header>
+</div>
+<div id="wrapper">
+	<div id="page">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="3u" id="sidebar2">
+					<section>
+						<div class="sbox1">
+							<h2>Zoeken</h2>
+							<ul class="style1">
+                                                            <form action="{{ path('immotom.tehuur', { page : '1' })}}" method="post"  {{ form_enctype(filterform) }} novalidate="novalidate">
+                                                            <dl class="clearfix">
+                                                                    {{ form_errors(filterform.category) }}
+                                                                    {{ form_errors(filterform.minprice) }}
+                                                                    {{ form_errors(filterform.maxprice) }}
+                                                                    {{ form_errors(filterform.bedroom) }}
+                                                                <li>
+                                                                    <dt>
+                                                                        {{ form_label(filterform.category) }}
+
+                                                                    </dt>
+                                                                    <dd>
+                                                                        {{ form_widget(filterform.category) }}
+                                                                    </dd>
+                                                                 </li>
+                                                                <li>
+                                                                    <dt>
+                                                                        {{ form_label(filterform.minprice) }}
+
+                                                                    </dt>
+                                                                    <dd>
+                                                                        {{ form_widget(filterform.minprice) }}
+                                                                    </dd>
+                                                                </li>
+                                                                <li>
+                                                                    <dt>
+                                                                        {{ form_label(filterform.maxprice) }}
+
+                                                                    </dt>
+                                                                    <dd>
+                                                                        {{ form_widget(filterform.maxprice) }}
+                                                                    </dd>
+                                                                </li>
+                                                                <li>
+                                                                    <dt>
+                                                                        {{ form_label(filterform.bedroom) }}
+                                                                    </dt>
+                                                                    <dd>
+                                                                        {{ form_widget(filterform.bedroom) }}
+                                                                    </dd>
+                                                                </li>
+                                                            </dl>
+                                                            {{ form_widget(filterform._token) }}
+                                                            <input class="btn btn-large btn-primary" type="submit" name="submit" value="Zoeken op gewenste filter" />
+                                                            </form>   
+							</ul>
+                                                        <p><a href="{{ path('immotom.resetfiltertehuur') }}"><input class="btn btn-large btn-primary" value="Reset Filter" /></a></p>
+						</div>
+                                                
+					</section>
+				</div>
+				<div class="9u mobileUI-main-content" id="content">
+					<section>
+						<div class="post">
+							<h2>Te Huur</h2>
+							<div id="marketing">
+                                                            <div class="3grid-layout">
+                                                                    <div class="row divider">
+                                                                            {% if  realestates %}
+                                                                            {% for realestate in realestates %}  
+                                                                            <div class="6u">
+                                                                                    <section>
+                                                                                            {% if  realestate.soldrented %}
+                                                                                            <h2 class="title">{{ realestate.name }} in {{ realestate.city }}  -  VERHUURD</h2>
+                                                                                            {% else %}
+                                                                                            <h2 class="title">{{ realestate.name }} in {{ realestate.city }}</h2>
+                                                                                            {% endif %}
+                                                                                            <p class="subtitle">
+                                                                                                    Prijs: {{ realestate.price | number_format(0, '.', '.')}} euro/maand<br>
+                                                                                                    {% if  realestate.category == 5 %}
+                                                                                                    Aantal slaapkamers: niet van toepassing<br> 
+                                                                                                    {% else %}
+                                                                                                    Aantal slaapkamers: {{ realestate.bedrooms }}<br> 
+                                                                                                    {% endif %}</p>
+                                                                                            
+                                                                                                    {% if  realestate.soldrented %}
+                                                                                                    <p>
+                                                                                                        <a href="{{ path('immotom.tehuurdetail', { id : realestate.idrealestate })}}"><img src="{{ app.request.baseUrl }}/imagesrealestate/{{ realestate.photoname }}" id="notnormal" alt="" height="282"></a>
+                                                                                                    </p>
+                                                                                                    {% else %}
+                                                                                                    <p><a href="{{ path('immotom.tehuurdetail', { id : realestate.idrealestate })}}"><img src="{{ app.request.baseUrl }}/imagesrealestate/{{ realestate.photoname }}" id="normal" alt="" height="282"></a></p>
+                                                                                                    {% endif %}
+                                                                                                    <p class="button-style2"><a href="{{ path('immotom.tehuurdetail', { id : realestate.idrealestate })}}">Meer informatie</a></p>
+                                                                                    </section>
+                                                                            </div>
+                                                                            {% endfor %}
+                                                                            {% else %}
+                                                                            <p class="subtitle">Geen vastgoed gevonden door uw gekozen filer! <br>
+                                                                            Of gelieve links te kijken welke fouten U heeft gemaakt in het maken van de filter!</p> 
+                                                                            {% endif %} 
+                                                                    </div>
+                                                            </div>
+                                                    </div>
+                                                        {% if  pagesArray %}
+                                                        <div class="paging">
+                                                            <ul id="pagination-digg">
+                                                                    {% for page in pagesArray %}
+                                                                        {% if  page == currentpage%}
+                                                                            <li class="active">{{ page }}</li>
+                                                                        {% else %}
+                                                                            <li><a href="{{ path('immotom.tehuur', { page : page })}}">{{ page }}</a></li>
+                                                                        {% endif %} 
+                                                                    {% endfor %}
+                                                            </ul> 
+                                                        </div>
+                                                        {% else %}
+
+                                                        {% endif %} 
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

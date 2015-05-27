@@ -1,0 +1,48 @@
+{# extend the parent tpl #}
+{% extends 'layout.twig' %}
+
+{# set the pagetitle in the parent tpl #}
+{% set pageTitle = 'Immo Tom | Fout' %}
+
+{% block pageContent %}
+<body class="homepage">
+<div id="header-wrapper">
+	<header id="header">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="4u" id="logo">
+					<h1><a href="{{ path('immotom.browse')}}" class="mobileUI-site-name">Immo Tom</a></h1>
+					<p>De immo-site bij uitstek!</p>
+				</div>
+				<div class="8u" id="menu">
+					<nav class="mobileUI-site-nav">
+						<ul>
+							<li><a href="{{ path('immotom.browse')}}">Start</a></li>
+							<li><a href="{{ path('immotom.tekoop', { page : '1' })}}">Te Koop</a></li>
+							<li><a href="{{ path('immotom.tehuur', { page : '1' })}}">Te Huur</a></li>
+							<li><a href="{{ path('immotom.onzemakelaars', { page : '1' })}}">Onze Makelaars</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</header>
+</div>
+        <div id="wrapper">
+	<div id="page">
+		<div class="5grid-layout">
+			<div class="row mobileUI-main-content" id="content">
+				<div class="12u">
+					<section>
+						<div class="post">
+							<h2>Er is een fout opgetreden</h2>
+                                                        <p class="subtitle">Fout</p>
+                                                        <p>{{ error }}</p>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

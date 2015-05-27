@@ -1,0 +1,123 @@
+{# extend the parent tpl #}
+{% extends 'layout.twig' %}
+
+
+{# set the pagetitle in the parent tpl #}
+{% set pageTitle = 'Immo Tom | Onze Makelaars' %}
+
+{% block pageContent %}
+
+</head>
+<body class="homepage">
+<div id="header-wrapper">
+	<header id="header">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="4u" id="logo">
+					<h1><a href="{{ path('immotom.browse')}}" class="mobileUI-site-name">Immo Tom</a></h1>
+					<p>De immo-site bij uitstek!</p>
+				</div>
+				<div class="8u" id="menu">
+					<nav class="mobileUI-site-nav">
+						<ul>
+							<li><a href="{{ path('immotom.browse')}}">Start</a></li>
+							<li><a href="{{ path('immotom.tekoop', { page : '1' })}}">Te Koop</a></li>
+							<li><a href="{{ path('immotom.tehuur', { page : '1' })}}">Te Huur</a></li>
+							<li class="current_page_item"><a href="{{ path('immotom.onzemakelaars', { page : '1' })}}">Onze Makelaars</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</header>
+</div>
+<div id="wrapper">
+	<div id="page">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="3u" id="sidebar2">
+					<section>
+						<h2>Onze meest bekeken aanbiedingen</h2>
+						<ul class="style2">
+                                                        {% if  realestates %}
+                                                        {% for item in realestates %} 
+							<li>
+                                                            {% if  item.forsale == 1 %}
+                                                                <p><a href="{{ path('immotom.tekoopdetail', { id :item.idrealestate })}}"><img src="{{ app.request.baseUrl }}/imagesrealestate/{{ item.photoname }}" alt="" width="80">
+                                                                        {{ item.name }} in {{ item.city }}<br>
+                                                                        Type: Te koop<br> 
+                                                                        Prijs: {{ item.price | number_format(0, '.', '.')}} euro <br></a>
+                                                                </p>
+                                                            {% else %}
+                                                                <p><a href="{{ path('immotom.tehuurdetail', { id :item.idrealestate })}}"><img src="{{ app.request.baseUrl }}/imagesrealestate/{{ item.photoname }}" alt="" width="80">
+                                                                        {{ item.name }} in {{ item.city }}<br>
+                                                                        Type: Te huur<br> 
+                                                                        Prijs: {{ item.price | number_format(0, '.', '.')}} euro/maand<br></a>
+                                                                </p>
+                                                            {% endif %} 
+							</li>
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        <li>
+                                                            <p>Geen aanbiedingen gevonden.</p> 
+                                                        </li>
+                                                        {% endif %} 
+						</ul>
+                                                
+					</section>
+				</div>
+				<div class="9u mobileUI-main-content" id="content">
+					<section>
+						<div class="post">
+							<h2>Onze Makelaars</h2>
+                                                        {% if  brokers %}
+							                            <div id="marketing">
+                                                            <div class="3grid-layout">
+                                                                    <div class="row divider">
+                                                                            {% if  brokers %}
+                                                                            {% for broker in brokers %}  
+                                                                            <div class="6u">
+                                                                                    <section>
+                                                                                            <h2 class="title">{{ broker.name }}</h2>
+                                                                                            <p class="subtitle">
+                                                                                                    {{ broker.address }}<br>
+                                                                                                    {{ broker.zip }} {{ broker.city }}<br>
+                                                                                                    Telefoon: {{ broker.phone }}
+																							</p>
+                                                                                                    <img src="{{ app.request.baseUrl }}/imagesbrokers/{{ broker.image }}"  alt="" height="282">
+                                                                                                    <p class="button-style2"><a href="{{ path('immotom.contact', { id : broker.idbrokers })}}">Contacteer Ons</a></p>
+                                                                                    </section>
+                                                                            </div>
+                                                                            {% endfor %}
+                                                                            {% else %}
+                                                                            <p class="subtitle">Geen makelaars gevonden.</p> 
+                                                                            {% endif %} 
+                                                                    </div>
+                                                            </div>
+                                                    </div>
+                                                    {% else %}
+                                                    <p class="subtitle">Geen makelaars gevonden.</p>
+                                                    {% endif %} 
+                                                        {% if  pagesArray %}
+                                                        <div class="paging">
+                                                            <ul id="pagination-digg">
+                                                                    {% for page in pagesArray %}
+                                                                        {% if  page == currentpage%}
+                                                                            <li class="active">{{ page }}</li>
+                                                                        {% else %}
+                                                                            <li><a href="{{ path('immotom.tekoop', { page : page })}}">{{ page }}</a></li>
+                                                                        {% endif %} 
+                                                                    {% endfor %}
+                                                            </ul> 
+                                                        </div>
+                                                        {% else %}
+
+                                                        {% endif %} 
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

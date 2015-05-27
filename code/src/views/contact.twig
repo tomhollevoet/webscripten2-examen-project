@@ -1,0 +1,149 @@
+{# extend the parent tpl #}
+{% extends 'layout.twig' %}
+
+
+{# set the pagetitle in the parent tpl #}
+{% set pageTitle = 'Immo Tom | Contact' %}
+
+{% block pageContent %}
+<script type="text/javascript" src="{{ app.request.baseUrl }}/js/tinymce/tinymce.min.js"></script>
+
+<script>
+tinymce.init({
+    selector: "textarea",
+    theme: "modern",
+    height: 400,
+    plugins: [
+         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+         "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+         "save table contextmenu directionality emoticons template paste textcolor"
+   ],
+   content_css: "css/content.css",
+   toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons", 
+   style_formats: [
+        {title: 'Bold text', inline: 'b'},
+        {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
+        {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
+        {title: 'Example 1', inline: 'span', classes: 'example1'},
+        {title: 'Example 2', inline: 'span', classes: 'example2'},
+        {title: 'Table styles'},
+        {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+    ],
+ }); 
+ 
+</script>
+
+</head>
+<body class="homepage">
+<div id="header-wrapper">
+	<header id="header">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="4u" id="logo">
+					<h1><a href="{{ path('immotom.browse')}}" class="mobileUI-site-name">Immo Tom</a></h1>
+					<p>De immo-site bij uitstek!</p>
+				</div>
+				<div class="8u" id="menu">
+					<nav class="mobileUI-site-nav">
+						<ul>
+							<li><a href="{{ path('immotom.browse')}}">Start</a></li>
+                                                        {% if  type == "tehuur" %}
+                                                            <li><a href="{{ path('immotom.tekoop', { page : '1' })}}">Te Koop</a></li>
+                                                            <li  class="current_page_item"><a href="{{ path('immotom.tehuur', { page : '1' })}}">Te Huur</a></li>
+                                                            <li><a href="{{ path('immotom.onzemakelaars', { page : '1' })}}">Onze Makelaars</a></li>
+                                                        {% endif %} 
+                                                        {% if  type == "tekoop" %}
+                                                            <li class="current_page_item"><a href="{{ path('immotom.tekoop', { page : '1' })}}">Te Koop</a></li>
+                                                            <li><a href="{{ path('immotom.tehuur', { page : '1' })}}">Te Huur</a></li>
+                                                            <li><a href="{{ path('immotom.onzemakelaars', { page : '1' })}}">Onze Makelaars</a></li>
+                                                        {% endif %} 
+                                                        {% if  type == "normal" %}
+                                                            <li><a href="{{ path('immotom.tekoop', { page : '1' })}}">Te Koop</a></li>
+                                                            <li><a href="{{ path('immotom.tehuur', { page : '1' })}}">Te Huur</a></li>
+                                                            <li class="current_page_item"><a href="{{ path('immotom.onzemakelaars', { page : '1' })}}">Onze Makelaars</a></li>
+                                                        {% endif %}
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</header>
+</div>
+<div id="wrapper">
+	<div id="page">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="9u mobileUI-main-content" id="content">
+					<section>
+						<div class="post">
+							<h2>Contacteer Ons</h2>
+                                                        {% if  type == "tehuur" %}
+                                                            <p class="subtitle"><a href="{{ path('immotom.tehuur', { page : '1' })}}">Te Huur</a> > <a href="{{ path('immotom.tehuurdetail', { id : realestate.idrealestate })}}">{{ realestate.name }} in {{ realestate.city }}</a> > Contact</p>
+                                                        {% endif %} 
+                                                        {% if  type == "tekoop" %}
+                                                           <p class="subtitle"><a href="{{ path('immotom.tekoop', { page : '1' })}}">Te Koop</a> > <a href="{{ path('immotom.tekoopdetail', { id : realestate.idrealestate })}}">{{ realestate.name }} in {{ realestate.city }}</a> > Contact</p>
+                                                        {% endif %} 
+                                                        {% if  type == "normal" %}
+                                                           <p class="subtitle"><a href="{{ path('immotom.onzemakelaars', { page : '1' })}}">Onze Makelaars</a> > Contact</p>
+                                                        {% endif %}
+                                                        
+                                                        {% if  sended %}
+                                                        <p>Uw bericht werd succesvol verstuurd!</p>
+                                                        {% else %} 
+                                                           
+							<form action="{{ path('immotom.contact', { id : broker.idbrokers })}}" method="post"  {{ form_enctype(contactform) }} novalidate="novalidate">
+                                                                <p class="subtitle">
+                                                                        {{ form_label(contactform.name) }}
+                                                                        {{ form_errors(contactform.name) }}
+                                                                </p>
+                                                                <p>
+                                                                        {{ form_widget(contactform.name) }}
+                                                                </p>
+                                                                <p class="subtitle">
+                                                                        {{ form_label(contactform.email) }}
+                                                                        {{ form_errors(contactform.email) }}
+                                                                </p>
+                                                                <p>
+                                                                        {{ form_widget(contactform.email) }}
+                                                                <p class="subtitle">
+                                                                        {{ form_label(contactform.text) }}
+                                                                        {{ form_errors(contactform.text) }}
+                                                                </p>
+                                                                <p>
+                                                                        {{ form_widget(contactform.text) }}
+                                                                </p>
+                                                                <p class="subtitle">
+                                                                        {{ form_label(contactform.spam) }}
+                                                                        {{ form_errors(contactform.spam) }}
+                                                                </p>
+                                                                <p>
+                                                                        {{ form_widget(contactform.spam) }}
+                                                                </p>
+                                                            {{ form_widget(contactform._token) }}
+                                                            <input class="btn btn-large btn-primary" type="submit" name="submit" value="Verzenden" />
+                                                            </form>   
+                                                       {% endif %}
+						</div>
+					</section>
+				</div>
+				<div class="3u" id="sidebar2">
+					<section>
+						<div class="sbox1">
+							<h2>{{ broker.name }}</h2>
+                                                        <p class="subtitle">
+                                                            {{ broker.address }}<br>
+                                                            {{ broker.zip }} {{ broker.city }}
+                                                        </p>
+							<ul class="style1">
+								<li class="first"><img src="{{ app.request.baseUrl }}/imagesbrokers/{{ broker.image }}" alt="" width="260"></li>
+							</ul>
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="{{ app.request.baseUrl }}/js/omzettenKaart.js"></script>  
+{% endblock %}

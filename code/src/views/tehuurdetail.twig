@@ -1,0 +1,148 @@
+{# extend the parent tpl #}
+{% extends 'layout.twig' %}
+
+
+{# set the pagetitle in the parent tpl #}
+{% set pageTitle = 'Immo Tom | Te Huur' %}
+
+{% block pageContent %}
+
+        <style>
+            /* This rule is read by Galleria to define the gallery height: */
+            #galleria{height:600px}
+
+        </style>
+            
+        <!-- load jQuery -->
+        <script src="{{ app.request.baseUrl }}/js/jquerry.js"></script>
+
+        <!-- load Galleria -->
+        <script src="{{ app.request.baseUrl }}/js/galleria-1.2.9.min.js"></script>
+        
+        <script>
+
+        // Load the classic theme
+        Galleria.loadTheme('{{ app.request.baseUrl }}/js/galleria.classic.min.js');
+
+        // Initialize Galleria
+        Galleria.run('#galleria');
+
+        </script>
+        
+</head>
+<body class="homepage">
+<div id="header-wrapper">
+	<header id="header">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="4u" id="logo">
+					<h1><a href="{{ path('immotom.browse')}}" class="mobileUI-site-name">Immo Tom</a></h1>
+					<p>De immo-site bij uitstek!</p>
+				</div>
+				<div class="8u" id="menu">
+					<nav class="mobileUI-site-nav">
+						<ul>
+							<li><a href="{{ path('immotom.browse')}}">Start</a></li>
+							<li><a href="{{ path('immotom.tekoop', { page : '1' })}}">Te Koop</a></li>
+							<li class="current_page_item"><a href="{{ path('immotom.tehuur', { page : '1' })}}">Te Huur</a></li>
+							<li><a href="{{ path('immotom.onzemakelaars', { page : '1' })}}">Onze Makelaars</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</header>
+</div>
+<div id="wrapper">
+	<div id="page">
+		<div class="5grid-layout">
+			<div class="row">
+				<div class="9u mobileUI-main-content" id="content">
+					<section>
+						<div class="post">
+                                                        {% if  realestate.soldrented %}
+							<h2>VERHUURD: {{ realestate.name | raw }} in {{ realestate.city }} -  {{ realestate.price | number_format(0, '.', '.') }} euro/maand</h2>
+							{% else %}
+                                                        <h2>Te huur: {{ realestate.name | raw }} in {{ realestate.city }} -  {{ realestate.price | number_format(0, '.', '.') }} euro/maand</h2>
+							{% endif %}
+							<p class="subtitle"><a href="{{ path('immotom.tehuur', { page : '1' })}}">Te Huur</a> > {{ realestate.name }} in {{ realestate.city }}</p>
+                                                        
+                                                        <h3>{{ realestate.title | raw }}</h3>
+                                                         <div id="galleria">
+                                                            {% for photo in photos %}  
+                                                                <img src="{{ app.request.baseUrl }}/imagesrealestate/{{ photo.photoname }}" data-title="My title" data-description="My description" width="890">
+                                                            {% endfor %}
+                                                         </div>
+                                                        
+                                                        <h3>Omschrijving</h3>
+                                                            <p>{{ realestate.definition | raw }}</p>
+                                                        
+                                                        <h3>Gelegen in {{ realestate.address }} te {{ realestate.city }}</h3>
+                                                            <div id="mapCanvas"></div>
+                                                            <p id="address">Detailadres: {{ realestate.address }} {{ realestate.zip }} {{ realestate.city }}  </p>
+                                                         <div class="row divider">   
+                                                            
+                                                         <h3>Details</h3>
+                                                                <p><ul class="test">{{ realestate.detail | raw }}</ul></p>
+                                                        
+                                                         <h3>Indeling</h3>
+                                                                <p ><ul class="test">{{ realestate.division | raw }}</ul></p>
+            
+                                                         {% if  realestate.soldrented %}
+                                                         <h3>Helaas, dit pand is verhuurd. Toch nog vragen? Contacteer ons!</h3>
+                                                         <p class="button-style2"><a href="{{ path('immotom.contactAboutRealestate', { id : realestate.idrealestate })}}">Contacteer ons</a></p>
+                                                         {% else %}
+                                                         <h3>Interesse in dit pand? Contacteer ons!</h3>
+                                                         <p class="button-style2"><a href="{{ path('immotom.contactAboutRealestate', { id : realestate.idrealestate })}}">Ik heb interesse!</a></p>
+                                                         {% endif %}
+                                                         </div>
+					</section>
+				</div>
+				<div class="3u" id="sidebar2">
+					<section>
+						<div class="sbox1">
+							<h2>Aangeboden door <br> {{ broker.name }}</h2>
+							<ul class="style1">
+								<li class="first"><img src="{{ app.request.baseUrl }}/imagesbrokers/{{ broker.image }}" alt="" width="260"></li>
+							</ul>
+						</div>
+					</section>
+                                        <section>
+						<div class="sbox1">
+                                                        {% if  realestate.soldrented %}
+                                                         <h2>Helaas, dit pand is verhuurd. Toch nog vragen? Contacteer ons!</h2>
+                                                         <p class="button-style2"><a href="{{ path('immotom.contactAboutRealestate', { id : realestate.idrealestate })}}">Contacteer ons</a></p>
+                                                         {% else %}
+                                                         <h2>Interesse? Contacteer Ons!</h2>
+                                                         <p class="button-style2"><a href="{{ path('immotom.contactAboutRealestate', { id : realestate.idrealestate })}}">Ik heb interesse!</a></p>
+                                                         {% endif %}
+						</div>
+					</section>
+					<section>
+						<h2>Soortgelijke aanbiedingen</h2>
+						<ul class="style2">
+                                                        {% if  relatedrealestates %}
+                                                        {% for item in relatedrealestates %} 
+							<li>
+								<p><a href="{{ path('immotom.tehuurdetail', { id :item.idrealestate })}}"><img src="{{ app.request.baseUrl }}/imagesrealestate/{{ item.photoname }}" alt="" width="80">
+                                                                        {{ item.name }} in {{ item.city }}<br>
+                                                                        Type: Te huur<br> 
+                                                                        Prijs: {{ item.price | number_format(0, '.', '.')}} euro/maand<br></a>
+                                                               </p>
+							</li>
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        <li>
+                                                            <p>Geen aanbiedingen gevonden.</p> 
+                                                        </li>
+                                                        {% endif %} 
+						</ul>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="{{ app.request.baseUrl }}/js/omzettenKaart.js"></script>  
+{% endblock %}
